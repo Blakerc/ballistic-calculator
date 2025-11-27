@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simple Ballistic Calculator</title>
+  </head>
+  <body>
+    <h1>Ballistic Calculator (No Drag)</h1>
+
+    {% if error %}
+    <p style="color: red">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+      <label>
+        Muzzle velocity (m/s):
+        <input type="number" step="any" name="v0" required />
+      </label>
+      <br />
+
+      <label>
+        Angle (degrees):
+        <input type="number" step="any" name="angle" required />
+      </label>
+      <br />
+
+      <label>
+        Target distance (m):
+        <input type="number" step="any" name="distance" required />
+      </label>
+      <br /><br />
+
+      <button type="submit">Calculate</button>
+    </form>
+
+    {% if result %}
+    <h2>Result</h2>
+    <p>Drop at {{ result.distance }} m: {{ "%.3f"|format(result.drop) }} m</p>
+    {% endif %}
+  </body>
+</html>
