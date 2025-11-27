@@ -17,14 +17,21 @@ def plot_trajectory(v0, weight, diameter, filename):
         plt.savefig(filename)
         plt.close()
         return
-    xs, ys = zip(*points)
+    xs, ys_ft = zip(*points)
+    # Convert y to inches above/below bore line (start at 0)
+    y0 = ys_ft[0]
+    ys_in = [(y - y0) * 12 for y in ys_ft]
+    import numpy as np
     plt.figure(figsize=(8, 4))
-    plt.plot(xs, ys, label="Trajectory with drag (4 ft high)", color='blue', linewidth=2)
+    plt.plot(xs, ys_in, label="Deviation from bore (inches)", color='blue', linewidth=2)
     plt.xlabel("Distance (ft)")
-    plt.ylabel("Height (ft)")
-    plt.title("Projectile Trajectory (ft)")
-    plt.ylim(bottom=0)
-    plt.grid(True)
+    plt.ylabel("Deviation (inches)")
+    plt.title("Projectile Deviation from Bore Line")
+    plt.ylim(-24, 24)
+    plt.xlim(left=0, right=1500)
+    plt.xticks(np.arange(0, 1501, 100))
+    plt.axhline(0, color='black', linewidth=1, linestyle='--')
+    plt.grid(True, which='both', axis='both')
     plt.legend()
     plt.tight_layout()
     plt.savefig(filename)
