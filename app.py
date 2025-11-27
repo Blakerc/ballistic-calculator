@@ -28,8 +28,19 @@ def plot_trajectory(v0, weight, diameter, filename):
     plt.ylabel("Deviation (inches)")
     plt.title("Projectile Deviation from Bore Line")
     plt.ylim(-24, 24)
-    plt.xlim(left=0, right=1500)
-    plt.xticks(np.arange(0, 1501, 100))
+    plt.xlim(left=0, right=1000)
+    plt.xticks(np.arange(0, 1001, 100))
+    # Add y-ticks every inch, but label only every 6 inches
+    y_ticks = np.arange(-24, 25, 1)
+    y_labels = [str(i) if i % 6 == 0 else '' for i in y_ticks]
+    plt.yticks(y_ticks, y_labels)
+    # Add right-side y-axis with same ticks and labels
+    ax = plt.gca()
+    ax2 = ax.twinx()
+    ax2.set_ylim(-24, 24)
+    ax2.set_yticks(y_ticks)
+    ax2.set_yticklabels(y_labels)
+    ax2.tick_params(axis='y', direction='in', pad=2)
     plt.axhline(0, color='black', linewidth=1, linestyle='--')
     plt.grid(True, which='both', axis='both')
     plt.legend()
