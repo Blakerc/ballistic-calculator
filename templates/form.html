@@ -5,30 +5,148 @@
     <title>Simple Ballistic Calculator</title>
   </head>
   <body>
-    <h1>Ballistic Calculator (No Drag)</h1>
+    <h1>Ballistic Calculator</h1>
 
     {% if error %}
     <p style="color: red">{{ error }}</p>
     {% endif %}
 
-    <form method="POST">
+    <form method="POST" id="ballistic-form">
+      <label>
+        Caliber:
+        <select id="caliber-select">
+          <option value="">-- Select Caliber (optional) --</option>
+          <option value=".223 Remington" data-weight="55" data-diameter="0.224">
+            .223 Remington
+          </option>
+          <option
+            value=".308 Winchester"
+            data-weight="150"
+            data-diameter="0.308"
+          >
+            .308 Winchester
+          </option>
+          <option
+            value=".30-06 Springfield"
+            data-weight="150"
+            data-diameter="0.308"
+          >
+            .30-06 Springfield
+          </option>
+          <option
+            value=".300 Winchester Magnum"
+            data-weight="180"
+            data-diameter="0.308"
+          >
+            .300 Winchester Magnum
+          </option>
+          <option
+            value=".270 Winchester"
+            data-weight="130"
+            data-diameter="0.277"
+          >
+            .270 Winchester
+          </option>
+          <option
+            value=".243 Winchester"
+            data-weight="100"
+            data-diameter="0.243"
+          >
+            .243 Winchester
+          </option>
+          <option value=".22 LR" data-weight="40" data-diameter="0.223">
+            .22 LR
+          </option>
+          <option value="6.5 Creedmoor" data-weight="140" data-diameter="0.264">
+            6.5 Creedmoor
+          </option>
+          <option
+            value=".338 Lapua Magnum"
+            data-weight="250"
+            data-diameter="0.338"
+          >
+            .338 Lapua Magnum
+          </option>
+          <option
+            value=".300 AAC Blackout"
+            data-weight="125"
+            data-diameter="0.308"
+          >
+            .300 AAC Blackout
+          </option>
+          <option value=".357 Magnum" data-weight="158" data-diameter="0.357">
+            .357 Magnum
+          </option>
+          <option value=".45 ACP" data-weight="230" data-diameter="0.451">
+            .45 ACP
+          </option>
+          <option
+            value="7mm Remington Magnum"
+            data-weight="162"
+            data-diameter="0.284"
+          >
+            7mm Remington Magnum
+          </option>
+        </select>
+      </label>
+      <br />
+
       <label>
         Muzzle velocity (ft/s):
         <input type="number" step="any" name="v0" required />
       </label>
       <br />
 
-      <!-- Angle input removed: always parallel to ground (0 degrees) -->
-
-      <!-- Target distance removed: always plot for 100, 500, 1000 yards -->
+      <label>
+        Bullet weight (grains):
+        <input
+          type="number"
+          step="any"
+          name="weight"
+          id="weight-input"
+          required
+        />
+      </label>
       <br />
 
+      <label>
+        Bullet diameter (in):
+        <input
+          type="number"
+          step="any"
+          name="diameter"
+          id="diameter-input"
+          required
+        />
+      </label>
+      <br />
+      <br />
       <button type="submit">Calculate</button>
     </form>
+
+    <script>
+      // Auto-fill bullet weight and diameter when caliber is selected
+      document
+        .getElementById("caliber-select")
+        .addEventListener("change", function () {
+          var selected = this.options[this.selectedIndex];
+          var weight = selected.getAttribute("data-weight");
+          var diameter = selected.getAttribute("data-diameter");
+          if (weight) document.getElementById("weight-input").value = weight;
+          if (diameter)
+            document.getElementById("diameter-input").value = diameter;
+        });
+    </script>
 
     {% if result %}
     <h2>Result</h2>
     <p>Trajectory for a bullet fired parallel to the ground (0° angle):</p>
+    <p>Bullet weight: {{ result.weight }} grains</p>
+    <p>Bullet diameter: {{ result.diameter }} in</p>
+    <p>
+      Kinetic energy at muzzle: {{ '%.1f'|format(result.kinetic_energy) }}
+      ft-lbf
+    </p>
     {% if plot_url %}
     <h3>Trajectory Arc</h3>
     <img
